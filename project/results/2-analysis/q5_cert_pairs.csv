@@ -1,0 +1,12 @@
+city,district,median_shm,median_hgb,n_shm,n_hgb,selisih_pct
+Bekasi,Babelan,7333333.33,9875000.0,14.0,5.0,-25.74
+Bekasi,Harapan Indah,12672619.05,14000000.0,64.0,5.0,-9.48
+Bekasi,Summarecon Bekasi,13709677.42,17159722.22,17.0,8.0,-20.11
+Bogor,Cileungsi,9983333.33,7777777.78,33.0,7.0,28.36
+Bogor,Jonggol,6388888.89,6363636.36,10.0,9.0,0.4
+Bogor,Kota Wisata,14388392.86,11363636.36,24.0,5.0,26.62
+Bogor,Parung Panjang,11750000.0,13081967.21,7.0,5.0,-10.18
+Bogor,Sentul City,13729838.71,17500000.0,164.0,53.0,-21.54
+Depok,Cilodong,12482142.86,9166666.67,27.0,7.0,36.17
+Depok,Sawangan,13298245.61,13200000.0,66.0,5.0,0.74
+Tangerang,Cikupa Citra Raya,9666666.67,8133333.33,23.0,7.0,18.85

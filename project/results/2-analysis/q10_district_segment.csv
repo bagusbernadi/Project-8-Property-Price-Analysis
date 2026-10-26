@@ -1,0 +1,89 @@
+city,district,n,median_ppm2,segmen
+Jakarta Selatan,Kebayoran Baru,11,48571429.0,mahal
+Jakarta Selatan,Cipete,13,37000000.0,mahal
+Jakarta Selatan,Kemang,35,33750000.0,mahal
+Jakarta Selatan,Pondok Indah,10,31666667.0,mahal
+Jakarta Utara,Pantai Indah Kapuk,89,29000000.0,mahal
+Tangerang,Alam Sutera,115,26600000.0,mahal
+Tangerang,BSD De Park,11,25000000.0,mahal
+Jakarta Selatan,Cilandak,17,24400000.0,mahal
+Jakarta Utara,Kelapa Gading,12,24166667.0,mahal
+Jakarta Timur,Cakung,14,22000000.0,mahal
+Tangerang,BSD,81,21984127.0,mahal
+Tangerang,BSD City,72,21762295.0,mahal
+Jakarta Barat,Green Lake City,17,21363636.0,mahal
+Jakarta Barat,Puri Indah,10,20730769.0,mahal
+Jakarta Pusat,Cempaka Putih,10,20156250.0,mahal
+Tangerang,Gading Serpong,95,20121951.0,mahal
+Jakarta Barat,Permata Buana,25,20000000.0,mahal
+Tangerang,Ciledug,11,19875000.0,mahal
+Tangerang,Cisauk,12,18888889.0,mahal
+Jakarta Timur,Rawamangun,11,18518519.0,mahal
+Tangerang,Pagedangan,12,18217790.0,mahal
+Depok,Margonda,11,17333333.0,mahal
+Jakarta Selatan,Lebak Bulus,14,17029412.0,menengah
+Jakarta Barat,Jelambar,44,16369048.0,menengah
+Tangerang,Cipondoh,19,16279070.0,menengah
+Tangerang,BSD Nusaloka,11,16142857.0,menengah
+Bekasi,Summarecon Bekasi,30,15802573.0,menengah
+Bogor,Gunung Putri,14,15605114.0,menengah
+Jakarta Barat,Meruya,15,15333333.0,menengah
+Bekasi,Jatisampurna,25,15324675.0,menengah
+Bogor,Sentul City,265,15200000.0,menengah
+Bekasi,Cibubur,14,15090909.0,menengah
+Bogor,Cikeas,27,14861111.0,menengah
+Bogor,Gunung Sindur,52,14722222.0,menengah
+Tangerang,Pondok Cabe,10,14545977.0,menengah
+Tangerang,BSD Foresta,10,14528509.0,menengah
+Depok,Tapos,22,14423077.0,menengah
+Tangerang,Cikupa,25,14400000.0,menengah
+Tangerang,Sindang Jaya,15,14324324.0,menengah
+Bogor,Kota Wisata,29,14062500.0,menengah
+Tangerang,Curug,24,13888889.0,menengah
+Jakarta Selatan,Jagakarsa,41,13846154.0,menengah
+Depok,Cimanggis,48,13789855.0,menengah
+Tangerang,Tangerang Kota,14,13754960.0,menengah
+Depok,Cinere,67,13750000.0,menengah
+Tangerang,Lippo Karawaci,12,13666667.0,menengah
+Bogor,Sentul,11,13550136.0,menengah
+Bogor,Cibubur,16,13364583.0,menengah
+Bekasi,Grand Wisata,11,13333333.0,menengah
+Bekasi,Mustikajaya,17,13333333.0,menengah
+Depok,Beji,20,13266667.0,menengah
+Depok,Sawangan,74,13231579.0,menengah
+Bekasi,Harapan Indah,74,13188131.0,menengah
+Tangerang,Kelapa Dua,20,13090909.0,menengah
+Bogor,Parung Panjang,18,12659836.0,menengah
+Bekasi,Galaxy,12,12563636.0,menengah
+Bogor,Cibinong,64,12560647.0,menengah
+Bekasi,Tambun Selatan,10,12314815.0,menengah
+Tangerang,Karawaci,13,12307692.0,menengah
+Depok,Sukmajaya,32,12000000.0,menengah
+Depok,Limo,31,12000000.0,menengah
+Bogor,Tajur Halang,14,11777778.0,menengah
+Depok,Cinangka,32,11730769.0,menengah
+Depok,Cilodong,36,11696833.0,menengah
+Bekasi,Jatibening,23,11666667.0,menengah
+Bogor,Parung,21,11650000.0,menengah
+Bekasi,Jati Asih,42,11633333.0,terjangkau
+Bekasi,Kemang Pratama,13,11607143.0,terjangkau
+Depok,Pancoran Mas,42,11407143.0,terjangkau
+Bogor,Tanah Sareal,22,11387097.0,terjangkau
+Bekasi,Jatiwarna,12,11342703.0,terjangkau
+Depok,Bojong Sari,27,11214286.0,terjangkau
+Bekasi,Bekasi,34,11000000.0,terjangkau
+Bekasi,Jatiwaringin,12,10940336.0,terjangkau
+Tangerang,Pinang,19,10666667.0,terjangkau
+Bekasi,Bekasi Utara,25,10400000.0,terjangkau
+Bekasi,Tarumajaya,19,10185185.0,terjangkau
+Depok,Citayam,21,10138889.0,terjangkau
+Bekasi,Bekasi Timur,16,10019076.0,terjangkau
+Bogor,Cileungsi,40,9983333.0,terjangkau
+Bekasi,Bekasi Kota,14,9893939.0,terjangkau
+Bogor,Bogor Barat,13,9800000.0,terjangkau
+Tangerang,Cikupa Citra Raya,31,9615385.0,terjangkau
+Bekasi,Pondok Ungu,14,8214286.0,terjangkau
+Bogor,Cilebut,12,8013889.0,terjangkau
+Bekasi,Babelan,20,7611111.0,terjangkau
+Bogor,Bojong Gede,30,6562500.0,terjangkau
+Bogor,Jonggol,20,6363636.0,terjangkau

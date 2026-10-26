@@ -1,0 +1,7 @@
+fasilitas,n,median_ppm2
+carport >= 1,2707,14285714.0
+carport = 0,732,13964286.0
+daya listrik >= 2200 VA,2359,15324675.0
+daya listrik < 2200 VA,803,11611111.0
+furnished,231,18194444.0
+unfurnished,2002,13357975.0

@@ -2,7 +2,7 @@
 
 # Project 8: Property Price Analysis
 
-**Status: Analisis selesai di branch `project-8-build`.** Halaman rancangan ada di [`design-and-report/`](design-and-report/). Report v2 dan dashboard belum dibuat.
+**Status: Analisis dan Report v2 selesai di branch `project-8-build`.** Halaman ada di [`design-and-report/`](design-and-report/). Dashboard, infografik, dan notebook belum dibuat.
 
 **Tujuan:** membangun analisis dan dashboard harga rumah di Jabodetabek yang menunjukkan harga per m² setiap area, faktor yang paling terkait dengan harga, dan listing yang jauh di atas atau di bawah nilai wajarnya, sehingga calon pembeli dapat menilai area dan harga dengan pembanding yang adil.
 
@@ -70,6 +70,7 @@ Belum dihitung. Estimasi selisih harga per area belum dibuat (item terbuka).
 - Jumlah listing per kecamatan tidak merata (Bogor 854, Jakarta Pusat 31).
 - Batas wajar price per m2 (Rp 1 juta s.d. Rp 100 juta) adalah asumsi. Sensitivitas hanya mengubah sekitar 1% listing valid.
 - Lisensi dataset dan sitasi belum dicek.
+- Dashboard, infografik, notebook, dan cek Excel (Q14) belum dibuat.
 
 ## Struktur repository
 
@@ -80,8 +81,9 @@ design-and-report/index.html     Halaman project (tab Design dan Report)
 project/
   code/common.py                 Path dan konstanta
   code/1-data-preparation/       python/01_clean.py, sql/01_clean.sql
-  code/2-analysis/               python/02_analysis.py, sql/02_analysis.sql
+  code/2-analysis/               python/02_analysis.py, 03_questions.py, 04_crosscheck.py, sql/02_analysis.sql
   results/                       Hasil CSV per tahap
+design-and-report/src/           page_v1.html (pane Design), report_lib.py, report.css, build_report.py
   data/README.md                 Sumber dan lisensi data (raw/ tidak di-commit)
   docs/                          definitions.md, cleaning_decisions.md
   requirements.txt
@@ -95,4 +97,7 @@ Dari folder `project/` (data mentah diletakkan di `data/raw/jabodetabek_house_pr
 pip install -r requirements.txt
 python code/1-data-preparation/python/01_clean.py
 python code/2-analysis/python/02_analysis.py
+python code/2-analysis/python/03_questions.py
+python code/2-analysis/python/04_crosscheck.py
+cd .. && python design-and-report/src/build_report.py
 ```

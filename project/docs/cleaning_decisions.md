@@ -7,3 +7,4 @@
 5. `building_size_m2` kosong (1 baris): price per m2 NULL, tidak ikut perbandingan.
 
 Hasil per langkah: `results/1-data-preparation/01_cleaning_log.csv`.
+6. `city` ada spasi di depan pada semua baris (contoh `' Bekasi'`): di-trim. Tanpa trim, nama kota tidak cocok dengan tabel lain.

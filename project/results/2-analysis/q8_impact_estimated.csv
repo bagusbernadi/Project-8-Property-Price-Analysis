@@ -1,0 +1,3 @@
+kelompok,jumlah,total_selisih_rp_estimated,median_selisih_rp_estimated
+undervalued (rasio < 0.5),120,-402402850597.0,-1427458221.0
+overvalued (rasio > 2),59,339710473137.0,2207894737.0

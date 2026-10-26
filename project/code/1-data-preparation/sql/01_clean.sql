@@ -3,7 +3,7 @@ CREATE OR REPLACE TABLE raw AS SELECT * FROM read_csv_auto('{RAW_CSV}', header=t
 
 -- 1. Duplikat URL persis: simpan baris pertama
 CREATE OR REPLACE TABLE s1 AS
-SELECT * EXCLUDE (rn) FROM (SELECT *, row_number() OVER (PARTITION BY url ORDER BY ads_id) rn FROM raw) WHERE rn = 1;
+SELECT * EXCLUDE (rn) REPLACE (trim(city) AS city) FROM (SELECT *, row_number() OVER (PARTITION BY url ORDER BY ads_id) rn FROM raw) WHERE rn = 1;
 
 -- 2. Listing sama (ads_id sama, hanya beda suffix #qid): simpan satu
 CREATE OR REPLACE TABLE s2 AS
@@ -24,4 +24,5 @@ UNION ALL SELECT 'setelah hapus duplikat URL', (SELECT count(*) FROM s1)
 UNION ALL SELECT 'setelah hapus duplikat ads_id', (SELECT count(*) FROM s2)
 UNION ALL SELECT 'year_built > 2026 jadi NULL', (SELECT count(*) FROM listings WHERE year_built > 2026)
 UNION ALL SELECT 'price per m2 di luar batas (flag)', (SELECT count(*) FROM listings WHERE price_per_m2 IS NOT NULL AND flag_ppm2_out = 1)
-UNION ALL SELECT 'building_size_m2 kosong', (SELECT count(*) FROM listings WHERE building_size_m2 IS NULL);
+UNION ALL SELECT 'building_size_m2 kosong', (SELECT count(*) FROM listings WHERE building_size_m2 IS NULL)
+UNION ALL SELECT 'city ada spasi di depan (di-trim)', (SELECT count(*) FROM raw WHERE city <> trim(city));
