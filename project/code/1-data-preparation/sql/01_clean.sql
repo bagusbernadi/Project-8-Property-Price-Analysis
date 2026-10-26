@@ -1,5 +1,5 @@
 -- Membersihkan listing mentah. Parameter PPM2_MIN/PPM2_MAX diisi dari common.py.
-CREATE OR REPLACE TABLE raw AS SELECT * FROM read_csv_auto('{RAW_CSV}', header=true);
+CREATE OR REPLACE TABLE raw AS SELECT row_number() OVER () AS rid, * FROM read_csv_auto('{RAW_CSV}', header=true);
 
 -- 1. Duplikat URL persis: simpan baris pertama
 CREATE OR REPLACE TABLE s1 AS
@@ -26,3 +26,18 @@ UNION ALL SELECT 'year_built > 2026 jadi NULL', (SELECT count(*) FROM listings W
 UNION ALL SELECT 'price per m2 di luar batas (flag)', (SELECT count(*) FROM listings WHERE price_per_m2 IS NOT NULL AND flag_ppm2_out = 1)
 UNION ALL SELECT 'building_size_m2 kosong', (SELECT count(*) FROM listings WHERE building_size_m2 IS NULL)
 UNION ALL SELECT 'city ada spasi di depan (di-trim)', (SELECT count(*) FROM raw WHERE city <> trim(city));
+
+-- Log per listing: satu baris per baris mentah yang dibuang atau diberi catatan
+CREATE OR REPLACE TABLE listing_log AS
+SELECT r.rid, r.url, r.ads_id, r.city, r.district, r.price_in_rp, r.building_size_m2,
+  CASE WHEN r.rid NOT IN (SELECT rid FROM s1) THEN 'dibuang: duplikat URL'
+       ELSE 'dibuang: duplikat ads_id' END AS aksi
+FROM raw r WHERE r.rid NOT IN (SELECT rid FROM s2)
+UNION ALL
+SELECT l.rid, l.url, l.ads_id, l.city, l.district, l.price_in_rp, l.building_size_m2,
+  concat_ws('; ',
+    CASE WHEN l.year_built > 2026 THEN 'year_built diubah NULL' END,
+    CASE WHEN l.flag_ppm2_out = 1 AND l.building_size_m2 IS NOT NULL THEN 'diberi flag: price per m2 di luar batas' END,
+    CASE WHEN l.building_size_m2 IS NULL THEN 'diberi flag: building_size_m2 kosong' END) AS aksi
+FROM listings l
+WHERE l.year_built > 2026 OR l.flag_ppm2_out = 1 OR l.building_size_m2 IS NULL;

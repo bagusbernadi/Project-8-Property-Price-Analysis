@@ -2,7 +2,7 @@
 
 # Project 8: Property Price Analysis
 
-**Status: Analisis dan Report v2 selesai di branch `project-8-build`.** Halaman ada di [`design-and-report/`](design-and-report/). Dashboard, infografik, dan notebook belum dibuat.
+**Status: Analisis, Report v2, dashboard, infografik, dan notebook selesai di branch `project-8-build`.** Halaman ada di [`design-and-report/`](design-and-report/). Dashboard belum di-deploy.
 
 **Tujuan:** membangun analisis dan dashboard harga rumah di Jabodetabek yang menunjukkan harga per m² setiap area, faktor yang paling terkait dengan harga, dan listing yang jauh di atas atau di bawah nilai wajarnya, sehingga calon pembeli dapat menilai area dan harga dengan pembanding yang adil.
 
@@ -70,7 +70,8 @@ Belum dihitung. Estimasi selisih harga per area belum dibuat (item terbuka).
 - Jumlah listing per kecamatan tidak merata (Bogor 854, Jakarta Pusat 31).
 - Batas wajar price per m2 (Rp 1 juta s.d. Rp 100 juta) adalah asumsi. Sensitivitas hanya mengubah sekitar 1% listing valid.
 - Lisensi dataset dan sitasi belum dicek.
-- Dashboard, infografik, notebook, dan cek Excel (Q14) belum dibuat.
+- Dashboard belum di-deploy ke Streamlit Community Cloud (butuh akun user).
+- Cek silang dengan Excel asli belum dilakukan. Excel tidak tersedia; LibreOffice Calc dipakai dengan rumus yang sama.
 
 ## Struktur repository
 
@@ -81,8 +82,9 @@ design-and-report/index.html     Halaman project (tab Design dan Report)
 project/
   code/common.py                 Path dan konstanta
   code/1-data-preparation/       python/01_clean.py, sql/01_clean.sql
-  code/2-analysis/               python/02_analysis.py, 03_questions.py, 04_crosscheck.py, sql/02_analysis.sql
-  results/                       Hasil CSV per tahap
+  code/2-analysis/               python/02_analysis.py, 03_questions.py, 04_crosscheck.py, 05_excel_crosscheck.py, sql/02_analysis.sql
+  code/3-presentation/           python/06_dashboard_data.py, 07_infographic.py, 08_build_notebook.py; streamlit/app.py
+  results/                       Hasil CSV per tahap; 3-presentation/ berisi infografik, notebook, dan data dashboard
 design-and-report/src/           page_v1.html (pane Design), report_lib.py, report.css, build_report.py
   data/README.md                 Sumber dan lisensi data (raw/ tidak di-commit)
   docs/                          definitions.md, cleaning_decisions.md
@@ -99,5 +101,15 @@ python code/1-data-preparation/python/01_clean.py
 python code/2-analysis/python/02_analysis.py
 python code/2-analysis/python/03_questions.py
 python code/2-analysis/python/04_crosscheck.py
+python code/2-analysis/python/05_excel_crosscheck.py   # butuh soffice (LibreOffice)
+python code/3-presentation/python/06_dashboard_data.py
+python code/3-presentation/python/07_infographic.py
+python code/3-presentation/python/08_build_notebook.py
 cd .. && python design-and-report/src/build_report.py
+```
+
+Dashboard (dari folder `project/`):
+
+```
+streamlit run code/3-presentation/streamlit/app.py
 ```

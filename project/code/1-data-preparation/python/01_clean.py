@@ -11,5 +11,6 @@ sql = (SQL_CLEAN / "01_clean.sql").read_text().format(
 con.execute(sql)
 con.execute(f"COPY listings TO '{CLEAN_CSV.as_posix()}' (HEADER, DELIMITER ',')")
 con.table("cleaning_log").df().to_csv(RES_PREP / "01_cleaning_log.csv", index=False)
+con.table("listing_log").df().sort_values("rid").to_csv(RES_PREP / "01_listing_log.csv", index=False)
 print(con.table("cleaning_log").df().to_string(index=False))
 con.close()

@@ -10,11 +10,12 @@ SQL_ANALYSIS = ROOT / "code" / "2-analysis" / "sql"
 RES_PREP = ROOT / "results" / "1-data-preparation"
 RES_ANALYSIS = ROOT / "results" / "2-analysis"
 DOCS_DIR = ROOT / "docs"
+RES_PRESENT = ROOT / "results" / "3-presentation"
 
 # Batas wajar harga per m2 (Rp). ASUMSI, bukan dari sumber data. Lihat docs/definitions.md.
 PPM2_MIN = 1_000_000
 PPM2_MAX = 100_000_000
 MIN_DISTRICT_N = 10  # kecamatan dengan listing kurang dari ini tidak dibandingkan
 
-for _d in (CLEAN_CSV.parent, RES_PREP, RES_ANALYSIS, DOCS_DIR):
+for _d in (CLEAN_CSV.parent, RES_PREP, RES_ANALYSIS, RES_PRESENT, DOCS_DIR):
     _d.mkdir(parents=True, exist_ok=True)

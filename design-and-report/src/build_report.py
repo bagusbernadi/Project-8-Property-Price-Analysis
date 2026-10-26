@@ -41,7 +41,11 @@ q12 = R(RA / "q12_before_after.csv")
 q13 = R(RA / "q13_geo_consistency.csv")
 q13c = R(RA / "q13_coord_outliers.csv")
 xc = R(RA / "04_crosscheck_sql_pandas.csv")
+xs = R(RA / "05_crosscheck_spreadsheet.csv")
 clog = R(RP / "01_cleaning_log.csv")
+llog = R(RP / "01_listing_log.csv")
+n_drop_log = int(llog.aksi.str.startswith("dibuang").sum())
+n_note_log = int(len(llog) - n_drop_log)
 
 con = duckdb.connect(str(DB_PATH), read_only=True)
 tbl = {t: con.execute(f"SELECT count(*) FROM {t}").fetchone()[0] for t in ("raw", "listings", "city_summary", "district_summary", "listing_vs_district")}
@@ -91,10 +95,11 @@ rp1.append('<div class="card"><h4>Tabel 1.2a. Tabel di DuckDB</h4>' +
                ["<code>district_summary</code>", "Median per kecamatan (n >= 10)", I(tbl["district_summary"])],
                ["<code>listing_vs_district</code>", "Listing dengan rasio terhadap median kecamatan", I(tbl["listing_vs_district"])]]) +
            '<p>Tabel <code>s1</code> dan <code>s2</code> adalah tahap antara pembersihan dan ikut tersimpan di file database.</p></div>')
-rp1.append('<div class="card"><h4>Tabel 1.2b. Cek silang SQL dan pandas (Q14)</h4>' +
-           table(["Tingkat", "Dibandingkan", "Sama", "Selisih maks", "Status"],
-                 [[r.level, I(r.jumlah_dibandingkan), I(r.sama), D(r.selisih_maks, 6), OK(r.status)] for r in xc.itertuples()]) +
-           '<p>Cek dilakukan dengan DuckDB dan pandas. Excel tidak dipakai karena tidak tersedia di sesi.</p></div>')
+rp1.append('<div class="card"><h4>Tabel 1.2b. Cek silang hasil (Q14)</h4>' +
+           table(["Cek", "Tingkat", "Dibandingkan", "Sama", "Selisih maks", "Status"],
+                 [["SQL vs pandas", r.level, I(r.jumlah_dibandingkan), I(r.sama), D(r.selisih_maks, 6), OK(r.status)] for r in xc.itertuples()] +
+                 [["SQL vs spreadsheet (LibreOffice Calc)", r.level, I(r.jumlah_dibandingkan), I(r.sama), D(r.selisih_maks, 6), OK(r.status)] for r in xs.itertuples()]) +
+           '<p>Excel tidak tersedia di sesi. Spreadsheet yang dipakai adalah LibreOffice Calc, yang menghitung ulang rumus <code>MEDIAN(IF(...))</code>. Angka Excel asli belum dicek.</p></div>')
 rp1.append('<div class="card"><h4>Tabel 1.2c. File hasil analisis (CSV)</h4>' +
            table(["File", "Isi"], [
                ["<code>results/1-data-preparation/01_cleaning_log.csv</code>", "Langkah pembersihan"],
@@ -145,7 +150,7 @@ ANS = {
  11: f"Listing dengan carport 1 atau lebih median Rp {I(q11.set_index('fasilitas').loc['carport >= 1','median_ppm2'])} per m2, tanpa carport Rp {I(q11.set_index('fasilitas').loc['carport = 0','median_ppm2'])}. Daya listrik 2.200 VA ke atas lebih mahal. Furnished jauh lebih mahal, tetapi jumlah datanya kecil.",
  12: f"{I(n_dupurl)} duplikat URL, {I(n_dupads)} duplikat ads_id, {I(n_flag)} harga per m2 di luar batas, dan {I(n_yr)} tahun bangun masa depan. Di {int((q12.selisih_pct.abs() < 1).sum())} dari {len(q12)} kota median berubah kurang dari 1%. Jakarta Pusat berubah {D(q12.set_index('city').loc['Jakarta Pusat','selisih_pct'],1)}% (n kecil, didorong listing ekstrem).",
  13: f"{I(q13.loc[1,'jumlah'])} listing punya koordinat lebih dari {I(50)} km dari median kotanya. Semuanya berada di kecamatan Harjamukti (Bogor) dan Depok II, dan koordinatnya kemungkinan salah input. Ambang 50 km adalah asumsi.",
- 14: "Median per kota dan kecamatan dari DuckDB sama dengan pandas (" + I(xc.sama.sum()) + " dari " + I(xc.jumlah_dibandingkan.sum()) + " perbandingan). Excel tidak dipakai.",
+ 14: "Median per kota dan kecamatan dari DuckDB sama dengan pandas (" + I(xc.sama.sum()) + " dari " + I(xc.jumlah_dibandingkan.sum()) + " perbandingan) dan dengan spreadsheet LibreOffice Calc (" + I(xs.sama.sum()) + " dari " + I(xs.jumlah_dibandingkan.sum()) + "). Excel asli belum dicek.",
 }
 # bukti per tema
 qlist = []
@@ -159,7 +164,7 @@ rp2.append('<h3>2.1 Harga per area (Q1 sampai Q3)</h3>')
 rp2.append(qlist[0] + qlist[1] + qlist[2])
 rp2.append('<h4>Grafik 2.1a. Median harga per m2 per kota</h4>' + bars(
     [(r.city, r.median_ppm2, "#1A73E8", f"{r.city}: Rp {I(r.median_ppm2)} (n={I(r.n)})") for r in city.itertuples()],
-    lambda v: I(v), "Median harga per m2 per kota", h=270, rot=35))
+    lambda v: I(v / 1e6) + " jt", "Median harga per m2 per kota (juta Rp)", h=270, rot=35))
 rp2.append('<h4>Tabel 2.1b. Lima kecamatan termahal dan termurah</h4>' + table(
     ["Kecamatan", "Kota", "n", "Median Rp/m2"],
     [[r.district, r.city, I(r.n), I(r.median_ppm2)] for r in pd.concat([rank.head(5), rank.tail(5)]).itertuples()]))
@@ -229,8 +234,9 @@ rp3 = ['<div class="callout a"><h4>Sumber</h4>Daftar Harga Rumah Jabodetabek (Ka
 rp4 = ['<div class="scroll"><table class="rt"><tr><th>Tool</th><th>Rancangan</th><th>Realisasi</th><th>Verdict</th></tr>',
        f'<tr><td>DuckDB + SQL</td><td>Database dan query</td><td>Dipakai untuk pembersihan dan analisis (<code>listings</code>, <code>city_summary</code>, dll.)</td><td>{OK("Sesuai")}</td></tr>',
        f'<tr><td>Python (pandas)</td><td>Analisis dan pembersihan</td><td>Dipakai untuk uji hipotesis, cek silang, dan hasil CSV</td><td>{OK("Sesuai")}</td></tr>',
-       f'<tr><td>Streamlit + Plotly</td><td>Dashboard interaktif</td><td>Belum dibuat</td><td>{NO("Tidak dibuat")}</td></tr>',
-       f'<tr><td>Excel (opsional)</td><td>Cek silang Q14</td><td>Tidak dipakai (tidak tersedia di sesi). Diganti cek silang SQL dan pandas</td><td>{PART("Sebagian")}</td></tr>',
+       f'<tr><td>Streamlit + Plotly</td><td>Dashboard interaktif</td><td>Dashboard dibuat dan diuji lokal (4 bagian). Belum di-deploy ke Streamlit Community Cloud</td><td>{PART("Sebagian")}</td></tr>',
+       f'<tr><td>Excel (opsional)</td><td>Cek silang Q14</td><td>Excel tidak tersedia. LibreOffice Calc dipakai dengan rumus yang sama</td><td>{PART("Sesuai + penyesuaian")}</td></tr>',
+       f'<tr><td>matplotlib dan nbformat</td><td>Tidak ada di rancangan</td><td>Dipakai untuk infografik (PNG dan PDF) dan notebook analisis</td><td>{OK("Tambahan")}</td></tr>',
        f'<tr><td>GitHub + Markdown</td><td>Repositori dan README</td><td>Repositori dan README dibuat di branch <code>project-8-build</code></td><td>{OK("Sesuai")}</td></tr>',
        '</table></div>']
 
@@ -239,18 +245,18 @@ src = (REPO / "design-and-report" / "src" / "page_v1.html").read_text(encoding="
 s6 = src[src.index('id="s6"'):src.index('id="s7"')]
 steps = re.findall(r'<b class="t">(.*?)</b>', s6)
 assert len(steps) == 12, len(steps)
-REAL = [("Sesuai", OK, "Definisi di README dan <code>docs/definitions.md</code>"),
-        ("Sesuai", OK, "Tabel dan kolom ada di DuckDB"),
-        ("Sesuai", OK, "CSV diunduh dan diprofil"),
-        ("Sesuai + penyesuaian", PART, "Cleaning dilakukan di SQL; nama kecamatan tidak diubah"),
-        ("Sebagian", PART, "Cek silang SQL vs pandas dilakukan; Excel tidak"),
-        ("Sesuai", OK, "Rasio dan selisih per listing dihitung"),
-        ("Sesuai", OK, "Batas minimal 10 listing diterapkan"),
-        ("Sesuai", OK, "Ditulis di Report ini"),
-        ("Sesuai", OK, "Pengujian ada di Report, bagian 2.5"),
-        ("Tidak dibuat", NO, "Notebook belum dibuat"),
-        ("Tidak dibuat", NO, "Dashboard belum dibuat"),
-        ("Sebagian", PART, "README diperbarui, infografik belum dibuat")]
+REAL = [("Sesuai", OK, "Definisi di <code>docs/definitions.md</code>"),
+        ("Sesuai", OK, "Lima tabel di DuckDB dan kamus kolom di Report"),
+        ("Sesuai + penyesuaian", PART, "File diunggah user (unduhan Kaggle diblokir sesi). Lisensi belum dicek"),
+        ("Sesuai + penyesuaian", PART, "Tambahan: trim spasi kota, log per listing (<code>01_listing_log.csv</code>)"),
+        ("Sesuai + penyesuaian", PART, "Koordinat 5 listing salah. Dikeluarkan dari peta, tidak dihapus dari tabel"),
+        ("Sesuai", OK, "Median per area dihitung dengan SQL (<code>02_analysis.sql</code>)"),
+        ("Sesuai + penyesuaian", PART, "Excel diganti LibreOffice Calc. Hasil sama dengan SQL dan pandas"),
+        ("Sesuai", OK, "Faktor dihitung dengan Spearman dan eta-squared"),
+        ("Sesuai", OK, "Nilai wajar dan segmen dihitung, estimasi selisih diberi label estimated"),
+        ("Sesuai", OK, "Batas minimal 10 listing dan sensitivitas batas harga"),
+        ("Sebagian", PART, "Dashboard Streamlit dan peta dibuat dan diuji. Belum di-deploy"),
+        ("Sesuai", OK, "README dan Report v2 selesai. Rekomendasi di bagian 7")]
 rp5 = ['<div class="scroll"><table class="rt"><tr><th>No</th><th>Rancangan</th><th>Realisasi</th><th>Verdict</th></tr>']
 for i, (t, (vtxt, fn, note)) in enumerate(zip(steps, REAL), 1):
     rp5.append(f'<tr><td>{i}</td><td>{esc(re.sub("<[^>]+>", "", t))}</td><td>{note}</td><td>{fn(vtxt)}</td></tr>')
@@ -259,24 +265,24 @@ rp5.insert(0, '<p class="how">Urutan langkah sama dengan rancangan, tetapi beber
 dq_b = int(q8r.loc['undervalued (rasio < 0.5)', 'jumlah'])
 
 # ---------------------------------------------------------------- Report 6: output
-OUTS = [("Dashboard interaktif", "Utama", "Tidak dibuat", NO, "Belum dibuat"),
-        ("One-sheet infografik", "Utama", "Tidak dibuat", NO, "Belum dibuat"),
-        ("Database & query SQL", "Utama", "Sebagian", PART, "File DuckDB dibuat (tidak di-commit). Query SQL ada di <code>project/code/*/sql/</code>"),
+OUTS = [("Dashboard interaktif", "Utama", "Sebagian", PART, "<code>project/code/3-presentation/streamlit/app.py</code>. Belum di-deploy (butuh akun Streamlit)"),
+        ("One-sheet infografik", "Utama", "Tercapai", OK, "<code>results/3-presentation/infographic.png</code> dan <code>.pdf</code>"),
+        ("Database & query SQL", "Utama", "Sebagian", PART, "File DuckDB dibuat (tidak di-commit). Query di <code>project/code/*/sql/</code>"),
         ("Skrip cleaning & pemuat data", "Utama", "Tercapai", OK, "<code>project/code/1-data-preparation/python/01_clean.py</code>"),
-        ("Notebook analisis", "Utama", "Tidak dibuat", NO, "Belum dibuat"),
+        ("Notebook analisis", "Utama", "Tercapai", OK, "<code>results/3-presentation/analysis.ipynb</code>, dijalankan tanpa error"),
         ("Laporan temuan & rekomendasi", "Utama", "Tercapai", OK, "README dan Report v2 di <code>design-and-report/</code>"),
         ("Repositori GitHub", "Utama", "Tercapai", OK, "Branch <code>project-8-build</code>"),
-        ("Slide presentasi", "Opsional", "Tidak dibuat", NO, "Belum dibuat")]
+        ("Slide presentasi", "Opsional", "Tidak dibuat", NO, "Opsional, belum dibuat")]
 rp6 = ['<div class="scroll"><table class="rt"><tr><th>Output</th><th>Label</th><th>Status</th><th>Bukti</th></tr>' +
        "".join(f'<tr><td>{o}</td><td>{l}</td><td>{fn(s)}</td><td>{b}</td></tr>' for o, l, s, fn, b in OUTS) + '</table></div>']
 n_out_done = sum(1 for o in OUTS if o[2] == "Tercapai")
 
 # ---------------------------------------------------------------- Report 7: kesimpulan
 crit = [("Sembilan pertanyaan Utama terjawab dengan angka dari data", "Tercapai", OK, "Q1, Q2, Q4, Q5, Q7, Q8, Q10, Q12, Q13 dijawab, lihat bagian 2"),
-        ("Angka SQL sama dengan hitungan pandas dan Excel", "Sebagian", PART, f"SQL vs pandas: {I(xc.sama.sum())} dari {I(xc.jumlah_dibandingkan.sum())} sama. Excel tidak dicek"),
-        ("Setiap listing yang diubah atau dikeluarkan tercatat", "Sebagian", PART, "Log dalam bentuk jumlah per aturan (Tabel 1.1), belum per listing"),
-        ("Orang awam paham dashboard dalam satu menit", "Tidak dibuat", NO, "Dashboard belum dibuat"),
-        ("Checklist standar terpenuhi", "Sebagian", PART, "Report dan README selesai, dashboard dan notebook belum")]
+        ("Angka SQL sama dengan hitungan pandas dan Excel", "Sebagian", PART, f"SQL = pandas: {I(xc.sama.sum())} dari {I(xc.jumlah_dibandingkan.sum())}. SQL = LibreOffice Calc: {I(xs.sama.sum())} dari {I(xs.jumlah_dibandingkan.sum())}. Excel asli belum"),
+        ("Setiap listing yang diubah atau dikeluarkan tercatat", "Tercapai", OK, f"Log per listing: <code>01_listing_log.csv</code> ({I(n_drop_log)} dibuang, {I(n_note_log)} diberi catatan)"),
+        ("Orang awam paham dashboard dalam satu menit", "Sebagian", PART, "Dashboard diuji lokal, belum diuji pengguna awam"),
+        ("Checklist standar terpenuhi", "Sebagian", PART, "Dashboard belum di-deploy. Lisensi belum dicek")]
 n_crit_ok = sum(1 for c in crit if c[1] == "Tercapai")
 rp7 = ['<h4>7.1 Hasil analisis</h4>',
        f'<p>Harga per m2 paling terkait dengan luas tanah dan jumlah kamar mandi, serta lokasi kota. Jakarta Utara dan Jakarta Selatan termahal, dan Depok serta Bekasi termurah. Sertifikat dan kondisi hampir tidak berpengaruh. Jumlah kamar tidur lebih kecil pengaruhnya daripada lokasi.</p>',
@@ -290,16 +296,16 @@ rp7 = ['<h4>7.1 Hasil analisis</h4>',
        '<li>Periksa manual listing dengan rasio di bawah 0,5 sebelum dianggap murah.</li>'
        '<li>Koreksi koordinat listing di Harjamukti dan Depok II.</li></ul>',
        '<h4>7.5 Saran perbaikan</h4>',
-       '<ul><li>Buat dashboard dan infografik, lalu uji dengan pembaca awam.</li>'
-       '<li>Tambahkan log pembersihan per listing.</li>'
-       '<li>Lakukan cek silang dengan Excel (Q14) bila tersedia.</li></ul>',
+       '<ul><li>Deploy dashboard ke Streamlit Community Cloud, lalu uji dengan pembaca awam.</li>'
+       '<li>Cek silang Q14 dengan Excel asli, menggunakan rumus yang sama dengan <code>q14_excel_crosscheck.xlsx</code>.</li>'
+       '<li>Perbaiki atau hapus 5 listing dengan koordinat salah.</li></ul>',
        '<h4>7.6 Batasan</h4>',
        '<ul><li>Harga listing bukan harga transaksi.</li>'
        '<li>Pola tidak sama dengan penyebab. Perbedaan kecamatan belum dikontrol sepenuhnya.</li>'
-       f'<li>Batas harga per m2, minimal listing, dan ambang rasio adalah asumsi. Lihat docs/definitions.md.</li>'
+       '<li>Batas harga per m2, minimal listing, dan ambang rasio adalah asumsi. Lihat docs/definitions.md.</li>'
        f'<li>Jumlah listing per kecamatan tidak merata (Bogor {I(kota.loc["Bogor","n"])}, Jakarta Pusat {I(kota.loc["Jakarta Pusat","n"])}).</li>'
        '<li>Lisensi dataset dan sitasi belum dicek.</li>'
-       '<li>Dashboard, infografik, notebook, dan Excel belum dibuat.</li></ul>']
+       '<li>Dashboard belum di-deploy. Cek silang Excel asli belum dilakukan.</li></ul>']
 
 # ---------------------------------------------------------------- rakit halaman
 def sec(id_, title, sub, body):
