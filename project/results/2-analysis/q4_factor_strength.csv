@@ -1,0 +1,13 @@
+faktor,ukuran,nilai,n
+land_size_m2,Spearman rho,0.388,3439
+building_size_m2,Spearman rho,0.294,3439
+bedrooms,Spearman rho,0.246,3409
+bathrooms,Spearman rho,0.355,3414
+carports,Spearman rho,0.204,3439
+floors,Spearman rho,0.252,3436
+building_age,Spearman rho,0.166,2032
+garages,Spearman rho,0.115,3439
+city,eta-squared,0.246,3439
+certificate,eta-squared,0.025,3302
+property_condition,eta-squared,0.007,3200
+furnishing,eta-squared,0.041,3071

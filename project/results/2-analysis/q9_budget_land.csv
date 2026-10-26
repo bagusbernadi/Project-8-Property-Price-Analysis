@@ -1,0 +1,89 @@
+city,district,n,med_land,luas_tanah_m2_1miliar
+Bogor,Jonggol,20,4027777.8,248.3
+Bogor,Cilebut,12,4375000.0,228.6
+Bogor,Bojong Gede,30,4583333.3,218.2
+Depok,Citayam,21,5416666.7,184.6
+Bekasi,Pondok Ungu,14,6234593.8,160.4
+Bekasi,Babelan,20,6583333.3,151.9
+Bekasi,Tambun Selatan,10,6855670.1,145.9
+Bogor,Tajur Halang,14,6866666.7,145.6
+Bekasi,Tarumajaya,19,7500000.0,133.3
+Bogor,Cikeas,27,7840000.0,127.6
+Bogor,Cileungsi,40,7858333.3,127.3
+Bekasi,Mustikajaya,17,8080000.0,123.8
+Bogor,Cibinong,64,8326388.9,120.1
+Bogor,Parung,21,8566666.7,116.7
+Bogor,Parung Panjang,18,8600000.0,116.3
+Tangerang,Cikupa Citra Raya,31,8750000.0,114.3
+Depok,Bojong Sari,27,8888888.9,112.5
+Tangerang,Sindang Jaya,15,8907563.0,112.3
+Bekasi,Bekasi Timur,16,9004629.6,111.1
+Bogor,Gunung Putri,14,9032258.1,110.7
+Bekasi,Bekasi Utara,25,9062500.0,110.3
+Depok,Tapos,22,9146341.5,109.3
+Bogor,Sentul,11,9170731.7,109.0
+Bogor,Tanah Sareal,22,9287500.0,107.7
+Depok,Cilodong,36,9345238.1,107.0
+Bekasi,Jati Asih,42,9615384.6,104.0
+Bekasi,Bekasi Kota,14,9761566.3,102.4
+Bekasi,Bekasi,34,9794871.8,102.1
+Tangerang,Curug,24,10000000.0,100.0
+Depok,Pancoran Mas,42,10028089.9,99.7
+Depok,Sawangan,74,10416666.7,96.0
+Depok,Cinangka,32,10491071.4,95.3
+Tangerang,Cikupa,25,10555555.6,94.7
+Bogor,Gunung Sindur,52,10887276.8,91.9
+Tangerang,Kelapa Dua,20,11166666.7,89.6
+Bogor,Bogor Barat,13,11428571.4,87.5
+Depok,Limo,31,11497006.0,87.0
+Bekasi,Grand Wisata,11,11500000.0,87.0
+Bekasi,Cibubur,14,11599415.2,86.2
+Bekasi,Harapan Indah,74,11620370.4,86.1
+Tangerang,Lippo Karawaci,12,11666666.7,85.7
+Depok,Cimanggis,48,12005127.1,83.3
+Tangerang,Cisauk,12,12142857.1,82.4
+Bogor,Sentul City,265,12222222.2,81.8
+Depok,Sukmajaya,32,12666666.7,78.9
+Bekasi,Jatiwarna,12,12742857.1,78.5
+Bekasi,Jatisampurna,25,12777777.8,78.3
+Bekasi,Kemang Pratama,13,12777777.8,78.3
+Tangerang,Pinang,19,12916666.7,77.4
+Bogor,Cibubur,16,12976744.2,77.1
+Tangerang,Pondok Cabe,10,13095238.1,76.4
+Tangerang,Karawaci,13,13125000.0,76.2
+Bogor,Kota Wisata,29,13250000.0,75.5
+Bekasi,Jatiwaringin,12,13397129.2,74.6
+Depok,Margonda,11,13565217.4,73.7
+Tangerang,Tangerang Kota,14,14570833.3,68.6
+Bekasi,Jatibening,23,14583333.3,68.6
+Tangerang,Pagedangan,12,14906832.3,67.1
+Tangerang,Cipondoh,19,15333333.3,65.2
+Depok,Cinere,67,15833333.3,63.2
+Depok,Beji,20,15986111.1,62.6
+Bekasi,Galaxy,12,16843741.7,59.4
+Bekasi,Summarecon Bekasi,30,17161489.9,58.3
+Jakarta Barat,Meruya,15,18400000.0,54.3
+Jakarta Timur,Cakung,14,19047619.0,52.5
+Tangerang,BSD Nusaloka,11,19852941.2,50.4
+Tangerang,Gading Serpong,95,20879120.9,47.9
+Jakarta Selatan,Jagakarsa,41,21111111.1,47.4
+Tangerang,BSD Foresta,10,22011126.9,45.4
+Tangerang,Ciledug,11,22105263.2,45.2
+Jakarta Selatan,Lebak Bulus,14,23064843.0,43.4
+Tangerang,BSD,81,24375000.0,41.0
+Jakarta Barat,Green Lake City,17,24583333.3,40.7
+Tangerang,BSD City,72,25820105.8,38.7
+Jakarta Timur,Rawamangun,11,26000000.0,38.5
+Tangerang,BSD De Park,11,26371308.0,37.9
+Jakarta Selatan,Cipete,13,26717557.3,37.4
+Jakarta Pusat,Cempaka Putih,10,27506188.1,36.4
+Jakarta Barat,Jelambar,44,28292806.5,35.3
+Jakarta Selatan,Kemang,35,29239766.1,34.2
+Jakarta Barat,Puri Indah,10,30000000.0,33.3
+Jakarta Selatan,Cilandak,17,32467532.5,30.8
+Jakarta Barat,Permata Buana,25,34027777.8,29.4
+Tangerang,Alam Sutera,115,34151785.7,29.3
+Jakarta Utara,Kelapa Gading,12,36062378.2,27.7
+Jakarta Utara,Pantai Indah Kapuk,89,40000000.0,25.0
+Jakarta Selatan,Pondok Indah,10,40943973.9,24.4
+Jakarta Selatan,Kebayoran Baru,11,48750000.0,20.5
