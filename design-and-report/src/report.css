@@ -22,4 +22,4 @@ main>nav .tab.on{border-color:var(--c);background:var(--c);color:#fff}
 main>nav .links{grid-column:1/-1;margin:8px 0 0 4px}
 }
 .grid2{display:grid;gap:12px}@media (min-width:1000px){.grid2{grid-template-columns:1fr 1fr}}
-.pill.p{background:#FBBC04;color:#3C2A00}.pill.d{background:#FCE8E6;color:#8A1C12}
+.pill{white-space:nowrap}.pill.p{background:#FBBC04;color:#3C2A00}.pill.d{background:#FCE8E6;color:#8A1C12}

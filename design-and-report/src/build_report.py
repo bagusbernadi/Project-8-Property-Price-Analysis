@@ -15,7 +15,7 @@ HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
 sys.path.insert(0, str(REPO / "project" / "code"))
 sys.path.insert(0, str(HERE))
-from common import DB_PATH, RES_ANALYSIS, RES_PREP, MIN_DISTRICT_N  # noqa: E402
+from common import DB_PATH, RES_ANALYSIS, RES_PREP, RES_PRESENT, MIN_DISTRICT_N  # noqa: E402
 from report_lib import (D, I, P, OK, PART, NO, audit, bars, cs, esc, hbars, legend, pill, qa, table, REG)  # noqa: E402
 
 RA, RP = RES_ANALYSIS, RES_PREP
@@ -100,18 +100,44 @@ rp1.append('<div class="card"><h4>Tabel 1.2b. Cek silang hasil (Q14)</h4>' +
                  [["SQL vs pandas", r.level, I(r.jumlah_dibandingkan), I(r.sama), D(r.selisih_maks, 6), OK(r.status)] for r in xc.itertuples()] +
                  [["SQL vs spreadsheet (LibreOffice Calc)", r.level, I(r.jumlah_dibandingkan), I(r.sama), D(r.selisih_maks, 6), OK(r.status)] for r in xs.itertuples()]) +
            '<p>Excel tidak tersedia di sesi. Spreadsheet yang dipakai adalah LibreOffice Calc, yang menghitung ulang rumus <code>MEDIAN(IF(...))</code>. Angka Excel asli belum dicek.</p></div>')
+CSV_DOC = [
+    (RP / "01_cleaning_log.csv", "Langkah pembersihan per tahap", "Bagian 1.2a, Q12"),
+    (RP / "01_listing_log.csv", "Satu baris per listing yang dibuang atau diberi catatan", "Q12"),
+    (RA / "02_city_summary.csv", "Median per kota", "Q1, Q8"),
+    (RA / "02_district_summary.csv", "Median per kecamatan (n >= 10)", "Q2, Q8, Q10"),
+    (RA / "02_hypothesis_tests.csv", "Uji lima hipotesis", "H1 sampai H5"),
+    (RA / "02_listing_outliers_vs_district.csv", "Listing dengan rasio di luar 0,5 s.d. 2", "Q7, Q8"),
+    (RA / "02_ppm2_bounds_sensitivity.csv", "Sensitivitas batas harga per m2", "Bagian 3.2"),
+    (RA / "04_crosscheck_sql_pandas.csv", "Cek silang SQL vs pandas", "Q14"),
+    (RA / "05_crosscheck_spreadsheet.csv", "Cek silang SQL vs LibreOffice Calc", "Q14"),
+    (RA / "q1_city_iqr.csv", "Sebaran harga per m2 per kota (IQR)", "Q1"),
+    (RA / "q2_district_rank.csv", "Peringkat kecamatan", "Q2"),
+    (RA / "q3_basis_compare.csv", "Basis bangunan vs tanah", "Q3"),
+    (RA / "q4_factor_strength.csv", "Kekuatan faktor (Spearman, eta-squared)", "Q4"),
+    (RA / "q5_cert_pairs.csv", "Selisih SHM vs HGB per kecamatan", "Q5, H3"),
+    (RA / "q6_size_bins.csv", "Median per kelompok luas", "Q6"),
+    (RA / "q7_undervalued_by_city.csv", "Proporsi listing undervalued per kota", "Q7"),
+    (RA / "q8_impact_estimated.csv", "Estimasi selisih harga", "Q8"),
+    (RA / "q9_budget_land.csv", "Luas tanah dengan anggaran Rp 1 miliar", "Q9"),
+    (RA / "q10_segments.csv", "Ringkasan segmen", "Q10"),
+    (RA / "q10_district_segment.csv", "Segmen per kecamatan", "Q10"),
+    (RA / "q11_facilities.csv", "Median per fasilitas", "Q11"),
+    (RA / "q12_before_after.csv", "Median sebelum dan sesudah pembersihan", "Q12"),
+    (RA / "q13_geo_consistency.csv", "Konsistensi nama area dan koordinat", "Q13"),
+    (RA / "q13_coord_outliers.csv", "Listing dengan koordinat lebih dari 50 km", "Q13"),
+    (RA / "q14_excel_crosscheck.xlsx", "Spreadsheet cek silang dengan rumus", "Q14"),
+    (RES_PRESENT / "dash_listings.csv", "Data listing untuk dashboard", "Dashboard (app.py)"),
+    (RES_PRESENT / "dash_districts.csv", "Data kecamatan untuk dashboard", "Dashboard (app.py)"),
+]
+_present = {p.name for d in (RA, RP, RES_PRESENT) for p in d.iterdir() if p.suffix in (".csv", ".xlsx")}
+_documented = {p.name for p, _, _ in CSV_DOC}
+assert _present == _documented, _present ^ _documented
+rows12c = [[f"<code>{p.relative_to(REPO)}</code>", isi, "-" if p.suffix == ".xlsx" else I(len(pd.read_csv(p))), pakai]
+           for p, isi, pakai in CSV_DOC]
 rp1.append('<div class="card"><h4>Tabel 1.2c. File hasil analisis (CSV)</h4>' +
-           table(["File", "Isi"], [
-               ["<code>results/1-data-preparation/01_cleaning_log.csv</code>", "Langkah pembersihan"],
-               ["<code>results/2-analysis/02_city_summary.csv</code>", "Median per kota"],
-               ["<code>results/2-analysis/02_district_summary.csv</code>", "Median per kecamatan"],
-               ["<code>results/2-analysis/02_hypothesis_tests.csv</code>", "Uji lima hipotesis"],
-               ["<code>results/2-analysis/02_listing_outliers_vs_district.csv</code>", "Listing dengan rasio di luar 0,5 s.d. 2"],
-               ["<code>results/2-analysis/02_ppm2_bounds_sensitivity.csv</code>", "Sensitivitas batas harga"],
-               ["<code>results/2-analysis/q1 sampai q13 (CSV)</code>", "Jawaban Q1 sampai Q13"],
-               ["<code>results/2-analysis/04_crosscheck_sql_pandas.csv</code>", "Cek silang Q14"]]) + '</div>')
+           table(["File", "Isi", "Baris", "Dipakai untuk"], rows12c) + '</div>')
 rp1.append('<h3>1.3 Angka kunci (KPI)</h3>')
-rp1.append('<div class="card">' + table(["KPI", "Rumus ringkas", "Hasil", "Jumlah data"], [
+rp1.append('<div class="card"><h4>Tabel 1.3. Angka kunci (KPI)</h4>' + table(["KPI", "Rumus ringkas", "Hasil", "Jumlah data"], [
     ["Median price per m2 semua listing valid", "median(harga / luas bangunan)", "Rp " + I(n_med_all), I(n_valid)],
     ["Kota termahal (median)", "median per kota", f"{c_hi.city}: Rp {I(c_hi.median_ppm2)}", I(c_hi.n)],
     ["Kota termurah (median)", "median per kota", f"{c_lo.city}: Rp {I(c_lo.median_ppm2)}", I(c_lo.n)],
@@ -156,8 +182,9 @@ ANS = {
 qlist = []
 for n in range(1, 15):
     qlist.append(qa(f"Q{n}", QT[n], PRIO[n], ANS[n], "Terjawab dengan catatan" if n in WARN else "Terjawab", n in WARN).replace('<div class="qa', f'<div id="q{n}" class="qa', 1))
+CNT = {k: sum(1 for v in PRIO.values() if v == k) for k in ("Utama", "Pendukung", "Tambahan")}
 rp2 = ['<div class="callout g"><h4>Jawaban singkat</h4>',
-       f'Semua 14 pertanyaan dijawab dengan data. Dari jumlah itu, {len(WARN)} pertanyaan dijawab dengan catatan (kuning). Pertanyaan utama project dijawab di bagian 7.</div>',
+       f'Semua {len(ANS)} pertanyaan dijawab dengan data. Per prioritas: Utama {CNT["Utama"]}, Pendukung {CNT["Pendukung"]}, Tambahan {CNT["Tambahan"]}. Dijawab dengan catatan (kuning): {", ".join("Q" + str(n) for n in sorted(WARN))} ({len(WARN)} pertanyaan). Pertanyaan utama project dijawab di bagian 7.</div>',
        '<div class="qchips">' + "".join(f'<a class="qc{" w" if n in WARN else ""}" href="#q{n}" title="{esc(QT[n])}">Q{n}</a>' for n in range(1, 15)) + '</div>',
        '<p class="how">Klik nomor pertanyaan untuk melompat. Hijau = terjawab, kuning = terjawab dengan catatan.</p>']
 rp2.append('<h3>2.1 Harga per area (Q1 sampai Q3)</h3>')
@@ -217,18 +244,14 @@ BUKTI = {"H1": f"Jakarta Utara ({I(kota.loc['Jakarta Utara','median_ppm2'])}) da
          "H4": f"Spearman luas bangunan vs harga per m2 = {D(rho_size,3)} (positif).",
          "H5": f"{I(n_flag)} listing ({D(n_flag/tbl['listings']*100,2)}%) kena flag batas. {I(ratio_low+ratio_hi)} listing rasio ekstrem, dan belum bisa dipastikan sebagai salah input."}
 rp3 = ['<div class="callout a"><h4>Sumber</h4>Daftar Harga Rumah Jabodetabek (Kaggle), Versi 1, tanggal akses 23 Oktober 2026. Lisensi dan sitasi belum dicek (item terbuka).</div>',
-       '<h3>3.1 Hipotesis Design</h3>',
+       '<h3>3.1 Hipotesis pada Design Project</h3>',
        '<div class="scroll"><table class="rt"><tr><th>No</th><th>Hipotesis</th><th>Verdict</th><th>Bukti</th></tr>' +
        "".join(f'<tr><td>{h}</td><td>{esc(HTXT[h])}</td><td>{VERD[h][1](VERD[h][0])}</td><td>{esc(BUKTI[h])}</td></tr>' for h in HTXT) +
        '</table></div>',
        '<h3>3.2 Sensitivitas batas harga per m2</h3>' + table(
            ["Batas bawah (Rp/m2)", "Batas atas (Rp/m2)", "Listing valid"],
            [[I(r.batas_bawah), I(r.batas_atas), I(r.listing_valid)] for r in sens.itertuples()]),
-       '<h3>3.3 Penyesuaian terhadap rancangan</h3>',
-       '<div class="card"><ul>' +
-       "<li>Basis harga per m2 memakai luas bangunan (rancangan belum memilih).</li>" +
-       f"<li>Batas wajar Rp {I(1_000_000)} s.d. Rp {I(100_000_000)} dan minimal {MIN_DISTRICT_N} listing per kecamatan adalah asumsi. Lihat tabel 3.2.</li>" +
-       "<li>Dua tabel tambahan (<code>listing_vs_district</code>, <code>cleaning_log</code>) dibuat untuk audit.</li></ul></div>"]
+]
 
 # ---------------------------------------------------------------- Report 4: tools
 rp4 = ['<div class="scroll"><table class="rt"><tr><th>Tool</th><th>Rancangan</th><th>Realisasi</th><th>Verdict</th></tr>',
@@ -262,6 +285,42 @@ for i, (t, (vtxt, fn, note)) in enumerate(zip(steps, REAL), 1):
     rp5.append(f'<tr><td>{i}</td><td>{esc(re.sub("<[^>]+>", "", t))}</td><td>{note}</td><td>{fn(vtxt)}</td></tr>')
 rp5.append('</table></div>')
 rp5.insert(0, '<p class="how">Urutan langkah sama dengan rancangan, tetapi beberapa langkah belum selesai (notebook, dashboard, dan Excel).</p>')
+ADJ = ["Basis harga per m2 memakai luas bangunan (rancangan belum memilih).",
+       f"Batas wajar Rp {I(1_000_000)} s.d. Rp {I(100_000_000)} dan minimal {MIN_DISTRICT_N} listing per kecamatan adalah asumsi. Lihat tabel 3.2.",
+       "Dua tabel tambahan (<code>listing_vs_district</code>, <code>cleaning_log</code>) dibuat untuk audit.",
+       "Trim spasi di kolom kota (<code>' Bekasi'</code>) ditemukan saat analisis. Dicatat di <code>project/docs/cleaning_decisions.md</code>.",
+       "Excel asli tidak tersedia. LibreOffice Calc dipakai untuk cek silang Q14.",
+       "Lima listing dengan koordinat salah dikeluarkan dari peta, tidak dihapus dari tabel."]
+rp5.append('<div class="card"><h4>Penyesuaian dan improvisasi yang tidak ada di rancangan</h4><ul>' +
+           "".join(f"<li>{x}</li>" for x in ADJ) + '</ul></div>')
+# (rancangan, realisasi, path untuk exists(), tidak di-commit?)
+FILES = [
+    ("index.html", "<code>design-and-report/index.html</code>", REPO / "design-and-report/index.html", False),
+    ("docs/kpi_definitions.md", "<code>project/docs/definitions.md</code>", REPO / "project/docs/definitions.md", False),
+    ("docs/data_dictionary.md", "Tidak dibuat terpisah. Definisi kolom ada di <code>project/docs/definitions.md</code>", None, False),
+    ("data/README.md", "<code>project/data/README.md</code>", REPO / "project/data/README.md", False),
+    ("data/raw/house_prices.csv", "<code>project/data/raw/jabodetabek_house_price.csv</code>", REPO / "project/data/raw/jabodetabek_house_price.csv", True),
+    ("scripts/clean_load.py", "<code>project/code/1-data-preparation/python/01_clean.py</code>", REPO / "project/code/1-data-preparation/python/01_clean.py", False),
+    ("outputs/cleaning_log.csv", "<code>project/results/1-data-preparation/01_cleaning_log.csv</code>", REPO / "project/results/1-data-preparation/01_cleaning_log.csv", False),
+    ("property.duckdb", "<code>project/project_8.duckdb</code>", REPO / "project/project_8.duckdb", True),
+    ("requirements.txt", "<code>project/requirements.txt</code>", REPO / "project/requirements.txt", False),
+    ("sql/", "<code>project/code/1-data-preparation/sql/</code> dan <code>project/code/2-analysis/sql/</code>", REPO / "project/code/2-analysis/sql", False),
+    ("notebooks/analysis.ipynb", "<code>project/results/3-presentation/analysis.ipynb</code>", REPO / "project/results/3-presentation/analysis.ipynb", False),
+    ("outputs/crosscheck.xlsx", "<code>project/results/2-analysis/q14_excel_crosscheck.xlsx</code>", REPO / "project/results/2-analysis/q14_excel_crosscheck.xlsx", False),
+    ("outputs/fair_value.csv", "Diganti: <code>project/results/2-analysis/02_district_summary.csv</code> (median) dan <code>02_listing_outliers_vs_district.csv</code> (rasio)", REPO / "project/results/2-analysis/02_district_summary.csv", False),
+    ("dashboard/app.py", "<code>project/code/3-presentation/streamlit/app.py</code>", REPO / "project/code/3-presentation/streamlit/app.py", False),
+    ("outputs/one_sheet.pdf/.png", "<code>project/results/3-presentation/infographic.pdf</code> dan <code>.png</code>", REPO / "project/results/3-presentation/infographic.pdf", False),
+    ("README.md", "<code>README.md</code>", REPO / "README.md", False),
+    ("slides/", "Belum dibuat (opsional)", None, False),
+]
+def _st(path, ign):
+    if path is None or not path.exists():
+        return "Belum ada"
+    return "Tidak di-commit" if ign else "Ada"
+FSTAT = [(a, b, _st(c, d)) for a, b, c, d in FILES]
+STAT_PILL = {"Ada": OK, "Belum ada": NO, "Tidak di-commit": PART}
+rp5.append('<h4>Tabel 5.1. Perubahan nama dan lokasi file terhadap rancangan</h4>' +
+           table(["Rancangan", "Realisasi"], [[f"<code>{a}</code>", b] for a, b, _ in FSTAT]))
 dq_b = int(q8r.loc['undervalued (rasio < 0.5)', 'jumlah'])
 
 # ---------------------------------------------------------------- Report 6: output
@@ -276,6 +335,7 @@ OUTS = [("Dashboard interaktif", "Utama", "Sebagian", PART, "<code>project/code/
 rp6 = ['<div class="scroll"><table class="rt"><tr><th>Output</th><th>Label</th><th>Status</th><th>Bukti</th></tr>' +
        "".join(f'<tr><td>{o}</td><td>{l}</td><td>{fn(s)}</td><td>{b}</td></tr>' for o, l, s, fn, b in OUTS) + '</table></div>']
 n_out_done = sum(1 for o in OUTS if o[2] == "Tercapai")
+rp6.append('<h4>Tabel 6.1. Daftar dokumen pada rancangan vs repositori</h4>' + table(["Dokumen di rancangan", "Di repositori", "Status"], [[f"<code>{a}</code>", b, STAT_PILL[st](st)] for a, b, st in FSTAT]))
 
 # ---------------------------------------------------------------- Report 7: kesimpulan
 crit = [("Sembilan pertanyaan Utama terjawab dengan angka dari data", "Tercapai", OK, "Q1, Q2, Q4, Q5, Q7, Q8, Q10, Q12, Q13 dijawab, lihat bagian 2"),
@@ -322,25 +382,46 @@ REPORT_HEAD = [
 ]
 report_pane = ['<div class="pane" id="report" data-tab="report" hidden>',
                '<div class="callout g"><h4>Report Project versi 2: evaluasi hasil terhadap Design Project</h4>'
-               f'Dibuat dari {I(tbl["listings"])} listing bersih. Cek silang dilakukan untuk {I(xc.jumlah_dibandingkan.sum())} kota dan kecamatan. Angka laporan dihasilkan dari file hasil (CSV) dan database.</div>']
+               f'Dibuat dari {I(tbl["listings"])} listing bersih. Cek silang dilakukan untuk {I(xc.jumlah_dibandingkan.sum())} perbandingan kota dan kecamatan (SQL vs pandas dan SQL vs spreadsheet). __NTOK__ angka diaudit. Angka laporan dihasilkan dari file hasil (CSV) dan database.</div>']
 for id_, t, sub, body in REPORT_HEAD:
     report_pane.append(sec(id_, t, sub, "".join(body) if isinstance(body, list) else body))
 report_pane.append('</div>')
+n_step_ok = sum(1 for x in REAL if x[0] == "Sesuai")
+n_out_ok = sum(1 for o in OUTS if o[2] == "Tercapai")
+EVQ = [
+    (OK, f"{I(n_valid)} listing valid setelah pembersihan, dengan log per langkah."),
+    (OK, f"{len(ANS)} pertanyaan dijawab, {len(WARN)} dengan catatan."),
+    (PART, "Dataset sesuai tema. Sumber diunggah manual, lisensi belum dicek."),
+    (PART, "Excel diganti LibreOffice Calc. Dashboard belum di-deploy."),
+    (PART, f"{n_step_ok} dari {len(REAL)} langkah sesuai penuh."),
+    (PART, f"{n_out_ok} dari {len(OUTS)} output tercapai."),
+    (PART, f"{n_crit_ok} dari {len(crit)} kriteria tercapai."),
+]
+LBL = ["Tercapai", "Terjawab", "Sebagian", "Sebagian", "Sebagian", "Sebagian", "Sebagian"]
+evq = ('<div class="evq scroll"><table class="rt"><tr><th>No</th><th>Pertanyaan evaluasi</th><th>Verdict</th><th>Ringkasan</th></tr>' +
+       "".join(f'<tr><td>{i}</td><td>{esc(REPORT_HEAD[i - 1][1])}</td><td>{EVQ[i - 1][0](LBL[i - 1])}</td><td>{EVQ[i - 1][1]}</td></tr>'
+               for i in range(1, 8)) +
+       '</table></div>')
+report_pane[1] += evq
 report_html = "\n".join(report_pane)
 
 nav_report = ('<div class="links" data-tab="report" hidden>' +
               '<a href="#rp1">Data</a><a href="#rp2">Business Questions</a><a href="#rp3">Dataset</a><a href="#rp4">Tools</a>'
               '<a href="#rp5">Alur Kerja</a><a href="#rp6">Project Output</a><a href="#rp7">Kesimpulan</a></div>')
 nav_old = re.search(r'<nav aria-label="Project navigation">.*?</nav>', src, re.S).group(0)
-nav_new = re.sub(r'<div class="links" data-tab="report" hidden>.*?</div>', nav_report, nav_old, flags=re.S)
+btn_d = re.search(r'<button type="button" class="tab on" data-t="design".*?</button>', nav_old, re.S).group(0)
+btn_r = re.search(r'<button type="button" class="tab" data-t="report".*?</button>', nav_old, re.S).group(0)
+links_d = re.search(r'<div class="links" data-tab="design">.*?</div>', nav_old, re.S).group(0)
+nav_new = '<nav aria-label="Project navigation">' + btn_d + btn_r + links_d + nav_report + '</nav>'
 
 # --- audit angka sebelum rakit
 STATIC = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "0", "50", "2200", "2026", "23", "2.200", "1.000.000", "100.000.000", "0,5", "0,25", "0,75", "1", "3.553",
           "1.1", "1.2", "1.3", "2.1", "2.2", "2.3", "2.4", "2.5", "3.1", "3.2", "3.3", "7.1", "7.2", "7.3", "7.4", "7.5", "7.6",
-          "100", "200", "400"}  # nomor bagian Report dan batas kelompok luas (label, bukan hasil)
+          "100", "200", "400", "5.1", "5.2", "6.1", "6.2"}  # nomor bagian Report dan batas kelompok luas (label, bukan hasil)
 n_tok, bad = audit(report_html, STATIC)
 print("token diperiksa:", n_tok, "| tidak terdaftar:", bad)
 assert not bad, bad
+report_html = report_html.replace("__NTOK__", I(n_tok))
 
 # --- rakit halaman: head + style (+report.css) + main(nav baru + pane Design identik + pane Report)
 start_design = src.index('<div class="pane" id="design"')
