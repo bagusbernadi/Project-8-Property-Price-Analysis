@@ -1,0 +1,7 @@
+project/data/raw/
+project/data/clean/
+project/*.duckdb
+project/*.duckdb.wal
+__pycache__/
+*.pyc
+.ipynb_checkpoints/

@@ -1,0 +1,6 @@
+hipotesis,ukuran,nilai_1,nilai_2
+H1,Kota termahal per m2," Jakarta Utara,  Jakarta Selatan (median tertinggi)"," Depok,  Bekasi (median terendah)"
+H2,Eta-squared lokasi (kota),0.246,Eta-squared jumlah kamar: 0.075
+H3,Kecamatan dengan SHM > HGB (n>=5 kedua jenis),6 dari 11 kecamatan,-
+H4,Spearman luas bangunan vs price per m2,0.294,-
+H5,Proporsi listing flag (input diragukan),0.0055,Rasio ekstrem vs median kecamatan: 0.069

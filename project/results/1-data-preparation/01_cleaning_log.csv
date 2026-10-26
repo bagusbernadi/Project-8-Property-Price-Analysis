@@ -1,0 +1,7 @@
+langkah,jumlah
+baris mentah,3553
+setelah hapus duplikat URL,3552
+setelah hapus duplikat ads_id,3458
+year_built > 2026 jadi NULL,1
+price per m2 di luar batas (flag),18
+building_size_m2 kosong,1
