@@ -2,7 +2,7 @@
 
 # Project 8: Property Price Analysis
 
-**Status: Analisis, Report v2, dashboard, infografik, dan notebook selesai di branch `project-8-build`.** Halaman ada di [`design-and-report/`](design-and-report/). Dashboard belum di-deploy.
+**Status: Analisis, Report v2, dashboard, infografik, dan notebook selesai dan digabung ke `main`.** Halaman ada di [`design-and-report/`](design-and-report/). Dashboard belum di-deploy.
 
 **Tujuan:** membangun analisis dan dashboard harga rumah di Jabodetabek yang menunjukkan harga per m² setiap area, faktor yang paling terkait dengan harga, dan listing yang jauh di atas atau di bawah nilai wajarnya, sehingga calon pembeli dapat menilai area dan harga dengan pembanding yang adil.
 
