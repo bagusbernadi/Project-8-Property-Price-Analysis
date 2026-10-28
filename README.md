@@ -25,7 +25,7 @@ Rancangan memecahnya menjadi 14 pertanyaan (9 Utama, 4 Pendukung, 1 Tambahan) da
 - Ukuran: 3.553 baris, 27 kolom (sesuai file yang diunduh). Setelah pembersihan: 3.458 listing unik, 3.439 dengan price per m2 valid.
 - Harga di dataset adalah harga listing, bukan harga transaksi.
 - Tabel di DuckDB: `raw`, `listings` (bersih), `city_summary`, `district_summary`, `listing_vs_district`, `cleaning_log`.
-- Lisensi dan sitasi: **belum dicek** di halaman sumber (item terbuka).
+- Lisensi: **Unknown** (label Kaggle, dicek 28 Oktober 2026), tanpa izin penggunaan ulang yang dinyatakan. Kolom `url` berisi tautan iklan rumah123.com; ketentuan situs asal dan sitasi belum dicek (item terbuka). Berkas mentah tidak dipublikasikan.
 - Data mentah tidak di-commit ke repository.
 
 ## 3. Analysis
@@ -69,7 +69,7 @@ Belum dihitung. Estimasi selisih harga per area belum dibuat (item terbuka).
 - Pola belum tentu penyebab; perbandingan dilakukan dalam kecamatan yang sama.
 - Jumlah listing per kecamatan tidak merata (Bogor 854, Jakarta Pusat 31).
 - Batas wajar price per m2 (Rp 1 juta s.d. Rp 100 juta) adalah asumsi. Sensitivitas hanya mengubah sekitar 1% listing valid.
-- Lisensi dataset dan sitasi belum dicek.
+- Lisensi dataset Unknown (tanpa izin penggunaan ulang yang dinyatakan); ketentuan situs asal dan sitasi belum dicek.
 - Dashboard belum di-deploy ke Streamlit Community Cloud (butuh akun user).
 - Cek silang dengan Excel asli belum dilakukan. Excel tidak tersedia; LibreOffice Calc dipakai dengan rumus yang sama.
 

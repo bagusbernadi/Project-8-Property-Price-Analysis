@@ -37,7 +37,7 @@ cand[cand.ratio < 0.5].sort_values('ratio').head(10)[['city', 'district', 'addre
     md("## Cek silang (Q14): SQL, pandas, dan spreadsheet"),
     code("""pd.concat({'sql_vs_pandas': pd.read_csv(R + '2-analysis/04_crosscheck_sql_pandas.csv'),
            'sql_vs_spreadsheet': pd.read_csv(R + '2-analysis/05_crosscheck_spreadsheet.csv')}, names=['cek'])"""),
-    md("## Catatan\n\nBatas harga per m2, minimal 10 listing per kecamatan, dan ambang rasio adalah asumsi (lihat `docs/definitions.md`). Lisensi dataset belum dicek."),
+    md("## Catatan\n\nBatas harga per m2, minimal 10 listing per kecamatan, dan ambang rasio adalah asumsi (lihat `docs/definitions.md`). Lisensi dataset Unknown (tanpa izin penggunaan ulang yang dinyatakan)."),
 ]
 nb = nbf.v4.new_notebook(cells=cells, metadata={"kernelspec": {"name": "python3", "display_name": "Python 3", "language": "python"}})
 client = NotebookClient(nb, timeout=600, kernel_name="python3", resources={"metadata": {"path": str(ROOT)}})

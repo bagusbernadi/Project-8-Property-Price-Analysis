@@ -243,7 +243,7 @@ BUKTI = {"H1": f"Jakarta Utara ({I(kota.loc['Jakarta Utara','median_ppm2'])}) da
          "H3": f"SHM lebih tinggi di {len(shm)} dari {len(q5)} kecamatan. Selisih median {D(q5.selisih_pct.median(),1)}%.",
          "H4": f"Spearman luas bangunan vs harga per m2 = {D(rho_size,3)} (positif).",
          "H5": f"{I(n_flag)} listing ({D(n_flag/tbl['listings']*100,2)}%) kena flag batas. {I(ratio_low+ratio_hi)} listing rasio ekstrem, dan belum bisa dipastikan sebagai salah input."}
-rp3 = ['<div class="callout a"><h4>Sumber</h4>Daftar Harga Rumah Jabodetabek (Kaggle), Versi 1, tanggal akses 23 Oktober 2026. Lisensi dan sitasi belum dicek (item terbuka).</div>',
+rp3 = ['<div class="callout a"><h4>Sumber</h4>Daftar Harga Rumah Jabodetabek (Kaggle), Versi 1, tanggal akses 23 Oktober 2026. Lisensi: Unknown (label Kaggle, dicek 28 Oktober 2026), tanpa izin penggunaan ulang yang dinyatakan; ketentuan situs asal (rumah123.com) belum dicek; sitasi belum dicatat (item terbuka).</div>',
        '<h3>3.1 Hipotesis pada Design Project</h3>',
        '<div class="scroll"><table class="rt"><tr><th>No</th><th>Hipotesis</th><th>Verdict</th><th>Bukti</th></tr>' +
        "".join(f'<tr><td>{h}</td><td>{esc(HTXT[h])}</td><td>{VERD[h][1](VERD[h][0])}</td><td>{esc(BUKTI[h])}</td></tr>' for h in HTXT) +
@@ -270,7 +270,7 @@ steps = re.findall(r'<b class="t">(.*?)</b>', s6)
 assert len(steps) == 12, len(steps)
 REAL = [("Sesuai", OK, "Definisi di <code>docs/definitions.md</code>"),
         ("Sesuai", OK, "Lima tabel di DuckDB dan kamus kolom di Report"),
-        ("Sesuai + penyesuaian", PART, "File diunggah user (unduhan Kaggle diblokir sesi). Lisensi belum dicek"),
+        ("Sesuai + penyesuaian", PART, "File diunggah user (unduhan Kaggle diblokir sesi). Lisensi Unknown (dicek 28 Okt 2026)"),
         ("Sesuai + penyesuaian", PART, "Tambahan: trim spasi kota, log per listing (<code>01_listing_log.csv</code>)"),
         ("Sesuai + penyesuaian", PART, "Koordinat 5 listing salah. Dikeluarkan dari peta, tidak dihapus dari tabel"),
         ("Sesuai", OK, "Median per area dihitung dengan SQL (<code>02_analysis.sql</code>)"),
@@ -342,7 +342,7 @@ crit = [("Sembilan pertanyaan Utama terjawab dengan angka dari data", "Tercapai"
         ("Angka SQL sama dengan hitungan pandas dan Excel", "Sebagian", PART, f"SQL = pandas: {I(xc.sama.sum())} dari {I(xc.jumlah_dibandingkan.sum())}. SQL = LibreOffice Calc: {I(xs.sama.sum())} dari {I(xs.jumlah_dibandingkan.sum())}. Excel asli belum"),
         ("Setiap listing yang diubah atau dikeluarkan tercatat", "Tercapai", OK, f"Log per listing: <code>01_listing_log.csv</code> ({I(n_drop_log)} dibuang, {I(n_note_log)} diberi catatan)"),
         ("Orang awam paham dashboard dalam satu menit", "Sebagian", PART, "Dashboard diuji lokal, belum diuji pengguna awam"),
-        ("Checklist standar terpenuhi", "Sebagian", PART, "Dashboard belum di-deploy. Lisensi belum dicek")]
+        ("Checklist standar terpenuhi", "Sebagian", PART, "Dashboard belum di-deploy. Lisensi Unknown")]
 n_crit_ok = sum(1 for c in crit if c[1] == "Tercapai")
 rp7 = ['<h4>7.1 Hasil analisis</h4>',
        f'<p>Harga per m2 paling terkait dengan luas tanah dan jumlah kamar mandi, serta lokasi kota. Jakarta Utara dan Jakarta Selatan termahal, dan Depok serta Bekasi termurah. Sertifikat dan kondisi hampir tidak berpengaruh. Jumlah kamar tidur lebih kecil pengaruhnya daripada lokasi.</p>',
@@ -364,7 +364,7 @@ rp7 = ['<h4>7.1 Hasil analisis</h4>',
        '<li>Pola tidak sama dengan penyebab. Perbedaan kecamatan belum dikontrol sepenuhnya.</li>'
        '<li>Batas harga per m2, minimal listing, dan ambang rasio adalah asumsi. Lihat docs/definitions.md.</li>'
        f'<li>Jumlah listing per kecamatan tidak merata (Bogor {I(kota.loc["Bogor","n"])}, Jakarta Pusat {I(kota.loc["Jakarta Pusat","n"])}).</li>'
-       '<li>Lisensi dataset dan sitasi belum dicek.</li>'
+       '<li>Lisensi dataset Unknown (tanpa izin penggunaan ulang yang dinyatakan); ketentuan situs asal dan sitasi belum dicek.</li>'
        '<li>Dashboard belum di-deploy. Cek silang Excel asli belum dilakukan.</li></ul>']
 
 # ---------------------------------------------------------------- rakit halaman
@@ -391,7 +391,7 @@ n_out_ok = sum(1 for o in OUTS if o[2] == "Tercapai")
 EVQ = [
     (OK, f"{I(n_valid)} listing valid setelah pembersihan, dengan log per langkah."),
     (OK, f"{len(ANS)} pertanyaan dijawab, {len(WARN)} dengan catatan."),
-    (PART, "Dataset sesuai tema. Sumber diunggah manual, lisensi belum dicek."),
+    (PART, "Dataset sesuai tema. Sumber diunggah manual, lisensi Unknown."),
     (PART, "Excel diganti LibreOffice Calc. Dashboard belum di-deploy."),
     (PART, f"{n_step_ok} dari {len(REAL)} langkah sesuai penuh."),
     (PART, f"{n_out_ok} dari {len(OUTS)} output tercapai."),
